@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <AuthorizeView>
+                <Authorized>
+                    <a class="btn btn-none text-danger" @onclick="LogoutClicked">Logout</a>
+                </Authorized>
+            </AuthorizeView>
+     
+
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+
+
+@code{
+    //Logout
+    async Task LogoutClicked()
+    {
+        //Khởi tạo một đối tượng UserSession mới là logoutModel
+        var logoutModel = new UserSession();
+        //một dịch vụ cung cấp trạng thái xác thực cho ứng dụng Blazor của bạn
+        var customAuthStateProvider = (CustomerAuthenticationStateProvider)AuthStateProvider;
+        //triển khai một CustomerAuthenticationStateProvider để xử lý việc cập nhật trạng thái xác thực.
+        //UpdateAuthenticationState truyền vào logoutModel
+        await customAuthStateProvider.UpdateAuthenticationState(logoutModel);
+        //sử dụng NavManager để điều hướng người dùng tới trang gốc ("/") với cờ forceLoad: true
+        NavManager.NavigateTo("/", forceLoad: true);
+    }
+}
